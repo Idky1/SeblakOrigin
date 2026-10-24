@@ -1,0 +1,860 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Seblak Origin · Mint Seblak Agents</title>
+<meta name="description" content="Burn $SBLor to mint a Seblak Agent miner NFT on Robinhood Chain." />
+<meta name="theme-color" content="#140c08" />
+<link rel="icon" href="favicon.png" />
+<meta property="og:title" content="Seblak Origin · Seblak Agents" />
+<meta property="og:description" content="Burn $SBLor, mint a miner, share the pool. Robinhood Chain." />
+<meta property="og:image" content="hero.webp" />
+<style>
+  :root{
+    --bg:#140c08; --bg2:#1d120c; --card:#22150e; --line:#3a2417; --ink:#f6ede6; --mute:#a8978a;
+    --chili:#e8321e; --orange:#ff7a1a; --gold:#ffcc33; --ok:#3ccf7a; --warn:#ffb020; --bad:#ff4d4d;
+    --r:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:var(--orange)}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  .wrap{max-width:980px;margin:0 auto;padding:0 16px}
+  header.top{position:sticky;top:0;z-index:20;background:rgba(20,12,8,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  header.top .wrap{display:flex;align-items:center;gap:10px;height:60px}
+  header.top img{width:34px;height:34px;border-radius:50%;border:2px solid var(--chili)}
+  .brand{font-weight:800;letter-spacing:.2px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .brand small{color:var(--orange);font-weight:700;margin-left:4px}
+  .btn{appearance:none;border:0;border-radius:12px;padding:11px 16px;font:inherit;font-weight:700;cursor:pointer;color:#fff;background:linear-gradient(135deg,var(--chili),var(--orange));box-shadow:0 4px 18px rgba(232,50,30,.25);transition:transform .08s,opacity .2s}
+  .btn:active{transform:scale(.98)}
+  .btn[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none}
+  .btn.ghost{background:transparent;border:1px solid var(--line);box-shadow:none;color:var(--ink)}
+  .btn.small{padding:7px 11px;font-size:13px;border-radius:10px}
+  .btn.block{width:100%}
+  .chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;padding:4px 9px;border-radius:999px;border:1px solid var(--line);color:var(--mute);white-space:nowrap}
+  .chip.ok{color:var(--ok);border-color:rgba(60,207,122,.4)} .chip.bad{color:var(--bad);border-color:rgba(255,77,77,.4)} .chip.warn{color:var(--warn);border-color:rgba(255,176,32,.4)}
+  .dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+
+  .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+  .hero .bgimg{position:absolute;inset:0;background:url(hero.webp) center 60%/cover no-repeat;opacity:.55}
+  .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,12,8,.35) 0%,rgba(20,12,8,.75) 60%,var(--bg) 100%)}
+  .hero .wrap{position:relative;z-index:1;padding:46px 16px 30px}
+  .hero h1{font-size:clamp(30px,7vw,52px);line-height:1.05;margin:10px 0 8px;font-weight:900;letter-spacing:-.5px}
+  .hero h1 span{background:linear-gradient(90deg,var(--gold),var(--orange),var(--chili));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{max-width:560px;color:#e6d6ca;margin:0 0 14px}
+
+  .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:18px 0}
+  @media(min-width:720px){.stats{grid-template-columns:repeat(4,1fr)}}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;min-width:0}
+  .stat .k{font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:.6px}
+  .stat .v{font-size:20px;font-weight:800;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .stat .s{font-size:12px;color:var(--mute)}
+  .bar{height:6px;background:#2d1c12;border-radius:6px;margin-top:8px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--orange),var(--chili))}
+
+  nav.tabs{display:flex;gap:6px;overflow-x:auto;padding:4px;background:var(--bg2);border:1px solid var(--line);border-radius:14px;margin:8px 0 14px;scrollbar-width:none}
+  nav.tabs button{flex:1;min-width:96px;appearance:none;border:0;background:transparent;color:var(--mute);font:inherit;font-weight:700;padding:10px;border-radius:10px;cursor:pointer}
+  nav.tabs button{white-space:nowrap}
+  @media(max-width:520px){nav.tabs{display:grid;grid-template-columns:repeat(2,1fr);overflow:visible}nav.tabs button{min-width:0;padding:9px 6px}}
+  nav.tabs button.on{background:var(--card);color:var(--ink);box-shadow:inset 0 0 0 1px var(--line)}
+  .panel{display:none} .panel.on{display:block}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:12px}
+  .card h3{margin:0 0 10px;font-size:17px}
+  .closed{border:1px dashed var(--warn);background:rgba(255,176,32,.07);border-radius:var(--r);padding:14px 16px;margin-bottom:12px}
+  .closed b{color:var(--warn);font-size:18px}
+  .checks{list-style:none;margin:0;padding:0}
+  .checks li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+  .checks li:last-child{border-bottom:0}
+  .checks .lbl{color:#e6d6ca}
+  label.f{display:block;font-size:13px;color:var(--mute);margin:12px 0 6px}
+  input.in{width:100%;background:#170e09;border:1px solid var(--line);border-radius:12px;color:var(--ink);font:inherit;padding:12px 13px;outline:none}
+  input.in:focus{border-color:var(--orange)}
+  .hint{font-size:12px;color:var(--mute);margin-top:6px;display:flex;justify-content:space-between;gap:8px}
+  .hint.bad{color:var(--bad)}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  .row>*{flex:1}
+  .steps{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+  .msg{margin-top:12px;font-size:14px;padding:10px 12px;border-radius:12px;display:none;word-break:break-word}
+  .msg.on{display:block}
+  .msg.err{background:rgba(255,77,77,.1);border:1px solid rgba(255,77,77,.35);color:#ffd0d0}
+  .msg.ok{background:rgba(60,207,122,.1);border:1px solid rgba(60,207,122,.35);color:#cff5df}
+  .msg.info{background:rgba(255,122,26,.08);border:1px solid rgba(255,122,26,.3);color:#ffe2cc}
+  .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+  .tier{border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center;background:#1a100b}
+  .tier b{display:block;font-size:15px} .tier span{font-size:12px;color:var(--mute)}
+  .t1 b{color:#e8e1d9} .t2 b{color:var(--orange)} .t3 b{color:var(--gold)}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  @media(min-width:720px){.grid{grid-template-columns:repeat(4,1fr)}}
+  .nft{background:#1a100b;border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+  .nft img{width:100%;aspect-ratio:1;display:block;background:#140c08}
+  .nft .b{padding:10px;font-size:13px;display:flex;flex-direction:column;gap:4px;flex:1}
+  .nft .d{color:var(--mute);font-size:12px;word-break:break-word;min-height:16px}
+  .empty{color:var(--mute);text-align:center;padding:26px 10px}
+  .claimbox{display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:space-between}
+  .claimbox .big{font-size:26px;font-weight:900}
+  .addr{font-size:12px;color:var(--mute);word-break:break-all}
+  footer{border-top:1px solid var(--line);margin-top:26px;padding:22px 0 40px;color:var(--mute);font-size:13px}
+  footer .risk{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:14px;margin-bottom:14px;color:#cdbcae}
+  .clist{display:grid;gap:6px}
+  .clist div{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+  dialog{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:18px;padding:18px;width:min(92vw,380px)}
+  dialog::backdrop{background:rgba(0,0,0,.6)}
+  .wlist{display:grid;gap:8px;margin:12px 0}
+  .wlist button{display:flex;align-items:center;gap:10px;justify-content:flex-start;background:#1a100b;border:1px solid var(--line);color:var(--ink);padding:12px;border-radius:12px;font:inherit;font-weight:700;cursor:pointer}
+  .wlist img{width:26px;height:26px;border-radius:6px}
+  .spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:sp .8s linear infinite;vertical-align:-2px;margin-right:6px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .netwarn{display:none;background:rgba(255,77,77,.12);border-bottom:1px solid rgba(255,77,77,.35);color:#ffd0d0;font-size:14px}
+  .netwarn.on{display:block}
+  .netwarn .wrap{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:8px 16px}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <img src="avatar.webp" alt="Seblak Origin" />
+    <div class="brand">Seblak Origin <small>$SBLor</small></div>
+    <span id="netChip" class="chip" style="display:none"></span>
+    <button id="connectBtn" class="btn small">Connect wallet</button>
+  </div>
+</header>
+<div id="netWarn" class="netwarn"><div class="wrap"><span>Your wallet is on the wrong network. Switch to Robinhood Chain (4663).</span><button class="btn small" id="switchBtn">Switch</button></div></div>
+
+<section class="hero">
+  <div class="bgimg"></div>
+  <div class="wrap">
+    <span id="mintPill" class="chip"><span class="dot"></span><span>Loading…</span></span>
+    <h1>Mint a <span>Seblak Agent</span></h1>
+    <p>Burn $SBLor to mint a miner NFT on Robinhood Chain. Each agent rolls a tier (Kerupuk 1x, Level Pedas 3x, Sultan 9x) and gets a share of the Mine pool's hourly release in proportion to its hashpower. Straight from Bandung, West Java.</p>
+    <div class="tiers">
+      <div class="tier t1"><b>Kerupuk</b><span>1x · 80%</span></div>
+      <div class="tier t2"><b>Level Pedas</b><span>3x · 16%</span></div>
+      <div class="tier t3"><b>Sultan</b><span>9x · 4%</span></div>
+    </div>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="stats">
+    <div class="stat"><div class="k">Minted</div><div class="v mono" id="sMinted">–</div><div class="bar"><i id="sMintedBar"></i></div></div>
+    <div class="stat"><div class="k">Total burned</div><div class="v mono" id="sBurned">–</div><div class="s">SBLor sent to 0x…dEaD</div></div>
+    <div class="stat"><div class="k">Mine pool</div><div class="v mono" id="sPool">–</div><div class="s">SBLor not yet released</div></div>
+    <div class="stat"><div class="k">Release / hour</div><div class="v mono" id="sPerHour">–</div><div class="s" id="sRate">2% of pool</div></div>
+    <div class="stat"><div class="k">Mint status</div><div class="v" id="sStatus">–</div><div class="s" id="sPrice">–</div></div>
+    <div class="stat"><div class="k">Network hashpower</div><div class="v mono" id="sHash">–</div><div class="s">sum of all agents</div></div>
+    <div class="stat"><div class="k">Claimed so far</div><div class="v mono" id="sClaimed">–</div><div class="s">SBLor paid to miners</div></div>
+    <div class="stat"><div class="k">Market volume</div><div class="v mono" id="sVolume">–</div><div class="s" id="sTrades">–</div></div>
+  </div>
+
+  <nav class="tabs" id="tabs">
+    <button data-t="mint" class="on">Mint</button>
+    <button data-t="miners">My Miners</button>
+    <button data-t="market">Market</button>
+    <button data-t="about">How it works</button>
+  </nav>
+
+  <!-- MINT -->
+  <section class="panel on" id="p-mint">
+    <div class="closed" id="closedBox" style="display:none">
+      <b>Mint belum dibuka</b>
+      <div style="color:#e6d6ca;margin-top:4px">Minting is not open yet. This page switches to live automatically as soon as the owner opens it. You can already check your eligibility below.</div>
+    </div>
+
+    <div class="card">
+      <h3>Eligibility</h3>
+      <ul class="checks">
+        <li><span class="lbl">Wallet connected on Robinhood Chain</span><span id="cConn" class="chip">–</span></li>
+        <li><span class="lbl">ERC-8004 Agent ID</span><span id="cAgent" class="chip">–</span></li>
+        <li><span class="lbl">SBLor balance (need <span id="cNeed">–</span>)</span><span id="cBal" class="chip">–</span></li>
+        <li><span class="lbl">Wallet limit</span><span id="cLimit" class="chip">–</span></li>
+        <li><span class="lbl">ETH for gas</span><span id="cGas" class="chip">–</span></li>
+        <li><span class="lbl">Regular wallet (EOA)</span><span id="cEoa" class="chip">–</span></li>
+      </ul>
+      <div class="hint" id="agentHelp" style="display:none">No Agent ID on this wallet. Minting needs an ERC-8004 identity registered on Robinhood Chain (registry <a class="mono" target="_blank" rel="noopener" id="regLink">0x8004…a432</a>).</div>
+    </div>
+
+    <div class="card">
+      <h3>Mint</h3>
+      <label class="f" for="directive">Directive (optional motto for your agent)</label>
+      <input id="directive" class="in" maxlength="120" placeholder="e.g. Level 5, no mercy" autocomplete="off" />
+      <div class="hint" id="dirHint"><span>Up to 120 plain characters. Not allowed: " \ &lt; &gt; &amp; and emoji.</span><span id="dirCount">0/120</span></div>
+
+      <label class="f" for="qty">How many (one transaction each)</label>
+      <input id="qty" class="in" type="number" min="1" max="10" value="1" inputmode="numeric" />
+      <div class="hint"><span>Cost: <b id="costTxt">–</b> SBLor burned</span><span>Allowance: <span id="allowTxt">–</span></span></div>
+
+      <div class="steps">
+        <button id="approveBtn" class="btn ghost" disabled>1 · Approve SBLor</button>
+        <button id="mintBtn" class="btn" disabled>2 · Mint</button>
+      </div>
+      <div id="mintMsg" class="msg"></div>
+    </div>
+  </section>
+
+  <!-- MINERS -->
+  <section class="panel" id="p-miners">
+    <div class="card">
+      <div class="claimbox">
+        <div>
+          <div class="k" style="color:var(--mute);font-size:12px;text-transform:uppercase;letter-spacing:.6px">Claimable now</div>
+          <div class="big mono" id="claimable">–</div>
+          <div class="addr">Your hashpower: <b id="myHash">–</b> · share of network: <b id="myShare">–</b></div>
+        </div>
+        <button id="claimBtn" class="btn" disabled>Claim SBLor</button>
+      </div>
+      <div id="claimMsg" class="msg"></div>
+    </div>
+    <div id="minersGrid" class="grid"></div>
+    <div id="minersEmpty" class="empty">Connect your wallet to see your miners.</div>
+    <div id="listMsg" class="msg"></div>
+  </section>
+
+  <!-- MARKET -->
+  <section class="panel" id="p-market">
+    <div class="card">
+      <h3>Agent market</h3>
+      <div style="color:var(--mute);font-size:14px">Fixed-price listings in SBLor. The buyer pays the price + 3%, the seller receives the price − 3%. Both 3% shares go into the Mine pool. Mining rewards earned before a sale stay claimable by the seller. To list one of your agents, open <a href="#" data-goto="miners">My Miners</a>.</div>
+    </div>
+    <div id="marketGrid" class="grid"></div>
+    <div id="marketEmpty" class="empty">Loading listings…</div>
+    <div id="marketMsg" class="msg"></div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="panel" id="p-about">
+    <div class="card">
+      <h3>How it works</h3>
+      <ol style="margin:0;padding-left:20px;color:#e6d6ca">
+        <li>Hold an ERC-8004 Agent ID and enough SBLor on Robinhood Chain.</li>
+        <li>Approve the Seblak Agents contract to spend the mint price, then mint. The SBLor is sent to the burn address 0x…dEaD for good.</li>
+        <li>Your agent rolls a tier at mint: Kerupuk (1x hashpower), Level Pedas (3x) or Sultan (9x).</li>
+        <li>The Mine contract releases 2% of its remaining pool every hour, split across all agents by hashpower. The pool only holds SBLor that was put into it (owner funding, market tax); nothing new is ever minted.</li>
+        <li>Claim whenever you like. If you sell or transfer an agent, what it mined until then stays claimable by you.</li>
+      </ol>
+      <p style="color:var(--mute);font-size:13px;margin-bottom:0">Because the release is a fixed share of what is left, the amount per hour shrinks over time unless the pool is topped up, and your share shrinks as more agents are minted. Tier rolls use on-chain pseudo-randomness. Max 10,000 agents, max 10 mints per wallet, minting only from regular wallets (no smart-contract wallets).</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="risk"><b>Risk notice.</b> SBLor and Seblak Agents are experimental, community tokens with no guaranteed value, liquidity or return. Minting permanently burns SBLor. Rewards depend entirely on the pool balance and on how many agents exist, and can fall to zero. Smart contracts can have bugs and transactions cannot be reversed. Nothing on this page is financial advice; only use funds you can afford to lose and check local rules before taking part.</div>
+    <div class="clist mono" id="contracts"></div>
+    <p style="margin-top:14px">Robinhood Chain (chain ID 4663) · gas is paid in ETH · Seblak Origin, Bandung 🌶️</p>
+  </div>
+</footer>
+
+<dialog id="walletDlg">
+  <b>Choose a wallet</b>
+  <div class="wlist" id="wlist"></div>
+  <div id="noWallet" style="display:none;font-size:14px;color:#e6d6ca">
+    No browser wallet found. On mobile, open this page inside your wallet's built-in browser:
+    <div class="wlist">
+      <button id="dlMetaMask">Open in MetaMask</button>
+      <button id="dlOkx">Open in OKX Wallet</button>
+    </div>
+    For Binance Web3 Wallet or Rabby, copy this page's link and paste it into the wallet's Discover / dApp browser.
+  </div>
+  <button class="btn ghost block" id="dlgClose" style="margin-top:6px">Close</button>
+</dialog>
+
+<script id="abis" type="application/json">
+{
+  "token": [
+    "function balanceOf(address) view returns (uint256)",
+    "function allowance(address,address) view returns (uint256)",
+    "function approve(address,uint256) returns (bool)",
+    "function decimals() view returns (uint8)",
+    "function symbol() view returns (string)",
+    "function totalSupply() view returns (uint256)",
+    "error ERC20InsufficientBalance(address sender, uint256 balance, uint256 needed)",
+    "error ERC20InsufficientAllowance(address spender, uint256 allowance, uint256 needed)",
+    "error ERC20InvalidApprover(address approver)",
+    "error ERC20InvalidReceiver(address receiver)",
+    "error ERC20InvalidSender(address sender)",
+    "error ERC20InvalidSpender(address spender)"
+  ],
+  "agents": [
+    "function mint(string directive) returns (uint256)",
+    "function mintEnabled() view returns (bool)",
+    "function mintPrice() view returns (uint256)",
+    "function maxSupply() view returns (uint256)",
+    "function maxPerWallet() view returns (uint256)",
+    "function totalSupply() view returns (uint256)",
+    "function totalBurned() view returns (uint256)",
+    "function mintedBy(address) view returns (uint256)",
+    "function hasAgentId(address) view returns (bool)",
+    "function identityRegistry() view returns (address)",
+    "function token() view returns (address)",
+    "function mine() view returns (address)",
+    "function owner() view returns (address)",
+    "function balanceOf(address) view returns (uint256)",
+    "function ownerOf(uint256) view returns (address)",
+    "function tokenOfOwnerByIndex(address,uint256) view returns (uint256)",
+    "function tierOf(uint256) view returns (uint8)",
+    "function tierName(uint8) pure returns (string)",
+    "function weightOfTier(uint8) pure returns (uint256)",
+    "function directiveOf(uint256) view returns (string)",
+    "function mintedAt(uint256) view returns (uint256)",
+    "function tokenURI(uint256) view returns (string)",
+    "function isApprovedForAll(address,address) view returns (bool)",
+    "function getApproved(uint256) view returns (address)",
+    "function setApprovalForAll(address,bool)",
+    "function setMintEnabled(bool)",
+    "function setMintPrice(uint256)",
+    "event Minted(uint256 indexed id, address indexed minter, uint8 tier, uint256 burned, string directive)",
+    "error MintClosed()",
+    "error SoldOut()",
+    "error WalletLimit()",
+    "error BadDirective()",
+    "error NoContracts()",
+    "error MineAlreadySet()",
+    "error NoAgentId()",
+    "error OwnableUnauthorizedAccount(address account)",
+    "error ERC721NonexistentToken(uint256 tokenId)",
+    "error ERC721IncorrectOwner(address sender, uint256 tokenId, address owner)",
+    "error ERC721InsufficientApproval(address operator, uint256 tokenId)",
+    "error ERC721InvalidReceiver(address receiver)",
+    "error ERC721InvalidOperator(address operator)",
+    "error ERC721OutOfBoundsIndex(address owner, uint256 index)"
+  ],
+  "mine": [
+    "event Claimed(address indexed owner, uint256 amount)",
+    "function pool() view returns (uint256)",
+    "function perHour() view returns (uint256)",
+    "function rateBps() view returns (uint256)",
+    "function totalWeight() view returns (uint256)",
+    "function reserved() view returns (uint256)",
+    "function backlog() view returns (uint256)",
+    "function lastUpdate() view returns (uint256)",
+    "function totalReleased() view returns (uint256)",
+    "function totalClaimed() view returns (uint256)",
+    "function weightOf(uint256) view returns (uint256)",
+    "function pending(uint256) view returns (uint256)",
+    "function credit(address) view returns (uint256)",
+    "function claimable(address) view returns (uint256)",
+    "function hashpowerOf(address) view returns (uint256)",
+    "function agents() view returns (address)",
+    "function token() view returns (address)",
+    "function update()",
+    "function claim() returns (uint256)",
+    "function claimIds(uint256[] ids) returns (uint256)",
+    "error OnlyAgents()",
+    "error NotOwner(uint256 id)",
+    "error ReentrancyGuardReentrantCall()"
+  ],
+  "market": [
+    "function list(uint256 id, uint256 price)",
+    "function cancel(uint256 id)",
+    "function buy(uint256 id, uint256 maxPrice)",
+    "function listings(uint256) view returns (address seller, uint256 price)",
+    "function costFor(uint256) view returns (uint256)",
+    "function TAX_BPS() view returns (uint256)",
+    "function volume() view returns (uint256)",
+    "function trades() view returns (uint256)",
+    "function taxToMine() view returns (uint256)",
+    "function token() view returns (address)",
+    "function agents() view returns (address)",
+    "function mine() view returns (address)",
+    "event Listed(uint256 indexed id, address indexed seller, uint256 price)",
+    "event Cancelled(uint256 indexed id)",
+    "event Bought(uint256 indexed id, address indexed seller, address indexed buyer, uint256 price, uint256 tax)",
+    "error NotOwner()",
+    "error NotListed()",
+    "error NotApproved()",
+    "error Stale()",
+    "error ReentrancyGuardReentrantCall()"
+  ]
+}
+</script>
+<script id="config" type="application/json">
+{
+  "chainId": 4663,
+  "chainName": "Robinhood Chain",
+  "rpcs": ["https://rpc.mainnet.chain.robinhood.com", "https://robinhood-rpc.publicnode.com", "https://robinhood.drpc.org"],
+  "explorer": "https://robinhoodchain.blockscout.com",
+  "token": "0x3085510A066Fde9F60B5F732814d38D3cAccEAa3",
+  "agents": "0xd32fe175A0FB38F44382F78e1c6717f314e4a2A9",
+  "mine": "0xd9927A5d63bE1d0Ba162148D83CF5e23ae664b52",
+  "market": "0xf3A5E8B8e6Cb6d8aA303e4C194A2B998cFd27ACf",
+  "registry": "0x8004A169FB4a3325136EB29fA0ceB6D2e539a432",
+  "marketDeployBlock": 95872807
+}
+</script>
+
+<script type="module">
+const $ = (id) => document.getElementById(id);
+const ABI = JSON.parse($("abis").textContent);
+const CFG = JSON.parse($("config").textContent);
+// Allow ?rpc=http://127.0.0.1:8545 for local fork testing only.
+const qs = new URLSearchParams(location.search);
+if (qs.get("rpc")) CFG.rpcs = [qs.get("rpc")];
+const CHAIN_HEX = "0x" + CFG.chainId.toString(16);
+
+let ethers;
+try { ethers = (await import("./ethers.min.js")).ethers; }
+catch { try { ethers = (await import("https://cdn.jsdelivr.net/npm/ethers@6.13.4/dist/ethers.min.js")).ethers; }
+catch { ethers = (await import("https://unpkg.com/ethers@6.13.4/dist/ethers.min.js")).ethers; } }
+
+// ------------------------------------------------------------------ read provider (no wallet needed)
+let rp = null;
+async function readProvider() {
+  if (rp) return rp;
+  for (const url of CFG.rpcs) {
+    try {
+      const p = new ethers.JsonRpcProvider(url, CFG.chainId, { staticNetwork: true });
+      await p.getBlockNumber();
+      rp = p; return p;
+    } catch (e) { console.warn("RPC failed", url, e); }
+  }
+  throw new Error("Could not reach Robinhood Chain RPC");
+}
+const R = {}; // read contracts
+async function initRead() {
+  const p = await readProvider();
+  R.token = new ethers.Contract(CFG.token, ABI.token, p);
+  R.agents = new ethers.Contract(CFG.agents, ABI.agents, p);
+  R.mine = new ethers.Contract(CFG.mine, ABI.mine, p);
+  R.market = new ethers.Contract(CFG.market, ABI.market, p);
+}
+const IFACES = ["token", "agents", "mine", "market"].map((k) => new ethers.Interface(ABI[k]));
+
+// ------------------------------------------------------------------ formatting
+const fmt = (wei, dp = 0) => {
+  if (wei === null || wei === undefined) return "–";
+  const n = Number(ethers.formatUnits(wei, 18));
+  if (n !== 0 && n < 1) return n.toLocaleString("en-US", { maximumFractionDigits: 4 });
+  return n.toLocaleString("en-US", { maximumFractionDigits: dp });
+};
+const compact = (wei) => {
+  const n = Number(ethers.formatUnits(wei, 18));
+  return n.toLocaleString("en-US", { notation: n >= 1e6 ? "compact" : "standard", maximumFractionDigits: n >= 1e6 ? 2 : 0 });
+};
+const short = (a) => a ? a.slice(0, 6) + "…" + a.slice(-4) : "";
+const exAddr = (a) => `${CFG.explorer}/address/${a}`;
+const exTx = (h) => `${CFG.explorer}/tx/${h}`;
+const TIER = { 1: ["Kerupuk", "#e8e1d9"], 2: ["Level Pedas", "#ff7a1a"], 3: ["Sultan", "#ffcc33"] };
+function chip(el, text, cls) { el.className = "chip " + (cls || ""); el.innerHTML = (cls ? '<span class="dot"></span>' : "") + text; }
+function msg(el, html, kind = "info") { el.className = "msg on " + kind; el.innerHTML = html; }
+function clearMsg(el) { el.className = "msg"; el.innerHTML = ""; }
+
+// ------------------------------------------------------------------ error decoding
+const FRIENDLY = {
+  MintClosed: () => "Mint belum dibuka — minting is not open yet.",
+  SoldOut: () => "Sold out: all agents have been minted.",
+  WalletLimit: () => "This wallet already minted the maximum allowed per wallet.",
+  BadDirective: () => 'Directive rejected: max 120 plain ASCII characters, no " \\ < > & and no emoji or line breaks.',
+  NoContracts: () => "Minting must be sent directly from a regular wallet (EOA). Smart-contract / account-abstraction wallets cannot mint.",
+  NoAgentId: () => "This wallet has no ERC-8004 Agent ID on Robinhood Chain, so it cannot mint.",
+  MineAlreadySet: () => "Mine is already set (owner action).",
+  OwnableUnauthorizedAccount: () => "Only the contract owner can do this.",
+  ERC20InsufficientAllowance: (a) => `Approval too low: allowance ${fmt(a.allowance)} SBLor, needed ${fmt(a.needed)} SBLor. Press Approve first.`,
+  ERC20InsufficientBalance: (a) => `Not enough SBLor: you have ${fmt(a.balance)}, needed ${fmt(a.needed)}.`,
+  OnlyAgents: () => "Only the Seblak Agents contract can call this.",
+  NotOwner: (a) => a && a.id !== undefined ? `You do not own agent #${a.id}.` : "You are not the owner/seller of this agent.",
+  NotListed: () => "This agent is not listed (it may already be sold or cancelled).",
+  NotApproved: () => "Approve the market for your agents first (setApprovalForAll).",
+  Stale: () => "Listing changed: the price went up or the seller no longer owns the agent. Refresh and try again.",
+  ReentrancyGuardReentrantCall: () => "Reentrant call blocked.",
+  ERC721NonexistentToken: (a) => `Agent #${a.tokenId} does not exist.`,
+  ERC721InsufficientApproval: () => "The market is not approved to move this agent anymore; the seller must re-approve.",
+  ERC721IncorrectOwner: () => "Agent owner changed.",
+  ERC721InvalidReceiver: () => "Receiver cannot accept NFTs.",
+};
+function findRevertData(e) {
+  const seen = new Set(); const stack = [e];
+  while (stack.length) {
+    const x = stack.pop();
+    if (!x || typeof x !== "object" || seen.has(x)) continue; seen.add(x);
+    if (typeof x.data === "string" && /^0x[0-9a-fA-F]{8}/.test(x.data)) return x.data;
+    if (x.data && typeof x.data === "object" && typeof x.data.data === "string") return x.data.data;
+    for (const k of ["error", "info", "cause", "data", "payload"]) if (x[k]) stack.push(x[k]);
+  }
+  return null;
+}
+function explain(e) {
+  if (!e) return "Unknown error";
+  if (e.code === "ACTION_REJECTED" || e.code === 4001 || e?.info?.error?.code === 4001) return "You rejected the request in your wallet.";
+  if (e.revert && e.revert.name && FRIENDLY[e.revert.name]) return FRIENDLY[e.revert.name](e.revert.args);
+  const data = findRevertData(e);
+  if (data) {
+    for (const i of IFACES) {
+      try {
+        const p = i.parseError(data);
+        if (p) {
+          if (p.name === "Error") return "Reverted: " + p.args[0];
+          const f = FRIENDLY[p.name]; return f ? f(p.args) : "Reverted: " + p.name;
+        }
+      } catch {}
+    }
+  }
+  if (e.reason) return "Reverted: " + e.reason;
+  const m = (e.shortMessage || e.message || String(e));
+  if (/insufficient funds/i.test(m)) return "Not enough ETH for gas on Robinhood Chain.";
+  return m.length > 220 ? m.slice(0, 220) + "…" : m;
+}
+
+// ------------------------------------------------------------------ wallet (EIP-6963 + window.ethereum fallback)
+const discovered = new Map();
+window.addEventListener("eip6963:announceProvider", (ev) => { const d = ev.detail; if (d?.info?.uuid) discovered.set(d.info.uuid, d); });
+window.dispatchEvent(new Event("eip6963:requestProvider"));
+let eip = null, bp = null, signer = null, account = null, chainOk = false;
+
+function legacyProviders() {
+  const out = [];
+  if (window.okxwallet) out.push({ info: { name: "OKX Wallet", uuid: "okx", icon: "" }, provider: window.okxwallet });
+  if (window.binancew3w?.ethereum) out.push({ info: { name: "Binance Web3 Wallet", uuid: "bnb", icon: "" }, provider: window.binancew3w.ethereum });
+  if (window.ethereum) out.push({ info: { name: window.ethereum.isRabby ? "Rabby" : window.ethereum.isMetaMask ? "MetaMask" : "Browser wallet", uuid: "injected", icon: "" }, provider: window.ethereum });
+  return out;
+}
+function openWalletPicker() {
+  window.dispatchEvent(new Event("eip6963:requestProvider"));
+  const list = discovered.size ? [...discovered.values()] : legacyProviders();
+  if (list.length === 1) return connectWith(list[0].provider);
+  const wl = $("wlist"); wl.innerHTML = "";
+  $("noWallet").style.display = list.length ? "none" : "block";
+  for (const w of list) {
+    const b = document.createElement("button");
+    b.innerHTML = (w.info.icon ? `<img src="${w.info.icon}" alt="">` : "") + `<span></span>`;
+    b.querySelector("span").textContent = w.info.name;
+    b.onclick = () => { $("walletDlg").close(); connectWith(w.provider); };
+    wl.appendChild(b);
+  }
+  $("walletDlg").showModal();
+}
+$("dlgClose").onclick = () => $("walletDlg").close();
+$("dlMetaMask").onclick = () => { location.href = "https://metamask.app.link/dapp/" + location.host + location.pathname; };
+$("dlOkx").onclick = () => { location.href = "okx://wallet/dapp/url?dappUrl=" + encodeURIComponent(location.href); };
+
+async function ensureChain() {
+  const cid = await eip.request({ method: "eth_chainId" });
+  if (parseInt(cid, 16) === CFG.chainId) return true;
+  try {
+    await eip.request({ method: "wallet_switchEthereumChain", params: [{ chainId: CHAIN_HEX }] });
+  } catch (e) {
+    const code = e?.code ?? e?.data?.originalError?.code;
+    if (code === 4902 || /unrecognized|not added|unknown chain/i.test(e?.message || "")) {
+      await eip.request({ method: "wallet_addEthereumChain", params: [{
+        chainId: CHAIN_HEX, chainName: CFG.chainName,
+        nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+        rpcUrls: CFG.rpcs.filter((u) => u.startsWith("https://")), blockExplorerUrls: [CFG.explorer],
+      }] });
+    } else throw e;
+  }
+  return parseInt(await eip.request({ method: "eth_chainId" }), 16) === CFG.chainId;
+}
+async function connectWith(provider) {
+  try {
+    eip = provider;
+    const accs = await eip.request({ method: "eth_requestAccounts" });
+    account = ethers.getAddress(accs[0]);
+    try { await ensureChain(); } catch (e) { console.warn(e); }
+    await syncWallet();
+    eip.on?.("accountsChanged", async (a) => { account = a?.[0] ? ethers.getAddress(a[0]) : null; await syncWallet(); });
+    eip.on?.("chainChanged", async () => { await syncWallet(); });
+  } catch (e) { msg($("mintMsg"), explain(e), "err"); }
+}
+async function syncWallet() {
+  if (!eip || !account) { signer = null; chainOk = false; $("connectBtn").textContent = "Connect wallet"; $("netChip").style.display = "none"; $("netWarn").classList.remove("on"); await refreshUser(); return; }
+  bp = new ethers.BrowserProvider(eip, "any");
+  const cid = parseInt(await eip.request({ method: "eth_chainId" }), 16);
+  chainOk = cid === CFG.chainId;
+  signer = await bp.getSigner(account);
+  $("connectBtn").textContent = short(account);
+  $("netChip").style.display = "inline-flex";
+  chip($("netChip"), chainOk ? "Robinhood" : "Wrong network", chainOk ? "ok" : "bad");
+  $("netWarn").classList.toggle("on", !chainOk);
+  await refreshUser();
+}
+$("connectBtn").onclick = () => account ? window.open(exAddr(account), "_blank") : openWalletPicker();
+$("switchBtn").onclick = async () => { try { await ensureChain(); await syncWallet(); } catch (e) { alert(explain(e)); } };
+
+function W(name) { // write contract bound to the signer
+  const addr = CFG[name]; return new ethers.Contract(addr, ABI[name], signer);
+}
+async function sendTx(label, el, fn) {
+  if (!signer) { openWalletPicker(); return null; }
+  if (!chainOk) { try { await ensureChain(); await syncWallet(); } catch (e) { msg(el, explain(e), "err"); return null; } if (!chainOk) { msg(el, "Switch your wallet to Robinhood Chain (4663) first.", "err"); return null; } }
+  try {
+    msg(el, `<span class="spin"></span>${label}: confirm in your wallet…`);
+    const tx = await fn();
+    msg(el, `<span class="spin"></span>${label}: waiting for confirmation… <a target="_blank" rel="noopener" href="${exTx(tx.hash)}">view tx</a>`);
+    const rc = await tx.wait();
+    if (rc.status !== 1) throw new Error("Transaction reverted");
+    return rc;
+  } catch (e) { msg(el, explain(e), "err"); return null; }
+}
+
+// ------------------------------------------------------------------ global stats
+let S = {};
+async function refreshStats() {
+  try {
+    const [minted, max, burned, enabled, price, perWallet, pool, perHour, rate, tw, claimed, vol, trades] = await Promise.all([
+      R.agents.totalSupply(), R.agents.maxSupply(), R.agents.totalBurned(), R.agents.mintEnabled(), R.agents.mintPrice(), R.agents.maxPerWallet(),
+      R.mine.pool(), R.mine.perHour(), R.mine.rateBps(), R.mine.totalWeight(), R.mine.totalClaimed(), R.market.volume(), R.market.trades(),
+    ]);
+    S = { minted, max, burned, enabled, price, perWallet, pool, perHour, rate, tw };
+    $("sMinted").textContent = `${minted.toLocaleString()} / ${max.toLocaleString()}`;
+    $("sMintedBar").style.width = (Number(minted) * 100 / Number(max)).toFixed(2) + "%";
+    $("sBurned").textContent = compact(burned);
+    $("sPool").textContent = compact(pool);
+    $("sPerHour").textContent = compact(perHour);
+    $("sRate").textContent = `${Number(rate) / 100}% of remaining pool`;
+    $("sStatus").innerHTML = enabled ? '<span style="color:var(--ok)">Open</span>' : '<span style="color:var(--warn)">Closed</span>';
+    $("sPrice").textContent = `Price ${fmt(price)} SBLor`;
+    $("sHash").textContent = tw.toLocaleString();
+    $("sClaimed").textContent = compact(claimed);
+    $("sVolume").textContent = compact(vol);
+    $("sTrades").textContent = `${trades} trade${trades === 1n ? "" : "s"} · SBLor`;
+    const soldOut = minted >= max;
+    chip($("mintPill").firstElementChild ? $("mintPill") : $("mintPill"), soldOut ? "Sold out" : enabled ? "Mint is live" : "Mint belum dibuka", soldOut ? "bad" : enabled ? "ok" : "warn");
+    $("closedBox").style.display = enabled ? "none" : "block";
+    $("cNeed").textContent = fmt(price) + " SBLor";
+  } catch (e) { console.error(e); chip($("mintPill"), "RPC unavailable", "bad"); }
+}
+
+// ------------------------------------------------------------------ user state
+let U = {};
+function validDirective(d) {
+  if (new TextEncoder().encode(d).length > 120) return false;
+  for (const ch of d) { const c = ch.codePointAt(0); if (c < 0x20 || c > 0x7e || ch === '"' || ch === "\\" || ch === "<" || ch === ">" || ch === "&") return false; }
+  return true;
+}
+function qty() { const q = Math.max(1, Math.min(Number($("qty").value) || 1, 10)); return BigInt(q); }
+function updateMintUi() {
+  const d = $("directive").value; const ok = validDirective(d);
+  $("dirCount").textContent = `${new TextEncoder().encode(d).length}/120`;
+  $("dirHint").classList.toggle("bad", !ok);
+  const price = S.price ?? 0n; const cost = price * qty();
+  $("costTxt").textContent = fmt(cost);
+  $("allowTxt").textContent = U.allowance !== undefined ? fmt(U.allowance) : "–";
+  const ready = !!(account && chainOk && S.enabled && U.hasId && U.remaining > 0n && U.bal >= price && U.eoa !== false && ok);
+  $("approveBtn").disabled = !(account && chainOk && (U.allowance ?? 0n) < cost && U.bal >= price);
+  $("mintBtn").disabled = !(ready && (U.allowance ?? 0n) >= price);
+}
+async function refreshUser() {
+  const conn = !!(account && chainOk);
+  chip($("cConn"), account ? (chainOk ? short(account) : "Wrong network") : "Not connected", account ? (chainOk ? "ok" : "bad") : "");
+  if (!account) {
+    U = {}; ["cAgent", "cBal", "cLimit", "cGas", "cEoa"].forEach((k) => chip($(k), "–"));
+    $("claimBtn").disabled = true; $("claimable").textContent = "–"; $("myHash").textContent = "–"; $("myShare").textContent = "–";
+    $("minersGrid").innerHTML = ""; $("minersEmpty").style.display = "block"; $("minersEmpty").textContent = "Connect your wallet to see your miners.";
+    updateMintUi(); renderMarket(); return;
+  }
+  try {
+    const p = await readProvider();
+    const [hasId, bal, mintedBy, allowance, eth, code, claimable, hp] = await Promise.all([
+      R.agents.hasAgentId(account), R.token.balanceOf(account), R.agents.mintedBy(account), R.token.allowance(account, CFG.agents),
+      p.getBalance(account), p.getCode(account), R.mine.claimable(account), R.mine.hashpowerOf(account),
+    ]);
+    const perWallet = S.perWallet ?? 10n;
+    // EIP-7702 delegated EOAs have code starting 0xef0100 but are still tx.origin == msg.sender
+    const eoa = code === "0x" || code.toLowerCase().startsWith("0xef0100");
+    U = { hasId, bal, mintedBy, allowance, eth, eoa, claimable, hp, remaining: perWallet > mintedBy ? perWallet - mintedBy : 0n };
+    chip($("cAgent"), hasId ? "Found" : "Missing", hasId ? "ok" : "bad");
+    $("agentHelp").style.display = hasId ? "none" : "block";
+    chip($("cBal"), fmt(bal) + " SBLor", bal >= (S.price ?? 0n) ? "ok" : "bad");
+    chip($("cLimit"), `${mintedBy}/${perWallet} minted`, U.remaining > 0n ? "ok" : "bad");
+    chip($("cGas"), Number(ethers.formatEther(eth)).toFixed(5) + " ETH", eth > 0n ? "ok" : "bad");
+    chip($("cEoa"), eoa ? "Yes" : "Smart wallet", eoa ? "ok" : "bad");
+    $("qty").max = String(Math.max(1, Number(U.remaining)));
+    $("claimable").textContent = fmt(claimable, 2) + " SBLor";
+    $("myHash").textContent = hp.toLocaleString();
+    $("myShare").textContent = S.tw && S.tw > 0n ? (Number(hp) * 100 / Number(S.tw)).toFixed(2) + "%" : "–";
+    $("claimBtn").disabled = !(conn && claimable > 0n);
+    updateMintUi();
+    await renderMiners();
+    renderMarket();
+  } catch (e) { console.error(e); }
+}
+
+// ------------------------------------------------------------------ mint flow
+$("directive").addEventListener("input", updateMintUi);
+$("qty").addEventListener("input", updateMintUi);
+$("approveBtn").onclick = async () => {
+  const el = $("mintMsg");
+  const cost = (S.price ?? 0n) * qty();
+  const rc = await sendTx("Approve " + fmt(cost) + " SBLor", el, () => W("token").approve(CFG.agents, cost));
+  if (rc) msg(el, `Approved ${fmt(cost)} SBLor for minting. Now press Mint.`, "ok");
+  await refreshUser();
+};
+$("mintBtn").onclick = async () => {
+  const el = $("mintMsg"); clearMsg(el);
+  const d = $("directive").value;
+  if (!validDirective(d)) return msg(el, FRIENDLY.BadDirective(), "err");
+  const n = Number(qty()); const got = [];
+  for (let i = 0; i < n; i++) {
+    const ag = W("agents");
+    try { await ag.mint.staticCall(d); } catch (e) { msg(el, explain(e), "err"); break; } // pre-flight for a clear error
+    const rc = await sendTx(`Mint ${i + 1}/${n}`, el, () => ag.mint(d));
+    if (!rc) break;
+    for (const log of rc.logs) {
+      try { const ev = R.agents.interface.parseLog(log); if (ev?.name === "Minted") got.push({ id: ev.args.id, tier: Number(ev.args.tier) }); } catch {}
+    }
+    await refreshStats(); await refreshUser();
+  }
+  if (got.length) {
+    msg(el, "Minted: " + got.map((g) => `<b style="color:${TIER[g.tier][1]}">#${g.id} ${TIER[g.tier][0]} (${g.tier === 3 ? 9 : g.tier === 2 ? 3 : 1}x)</b>`).join(", ") + `. See <a href="#" data-goto="miners">My Miners</a>.`, "ok");
+  }
+};
+
+// ------------------------------------------------------------------ miners
+function imgFromUri(uri) {
+  try { const j = JSON.parse(atob(uri.split(",")[1])); return j.image; } catch { return ""; }
+}
+async function renderMiners() {
+  const grid = $("minersGrid");
+  const n = await R.agents.balanceOf(account);
+  if (n === 0n) { grid.innerHTML = ""; $("minersEmpty").style.display = "block"; $("minersEmpty").textContent = "No agents in this wallet yet."; return; }
+  $("minersEmpty").style.display = "none";
+  const ids = await Promise.all([...Array(Number(n)).keys()].map((i) => R.agents.tokenOfOwnerByIndex(account, i)));
+  const approvedAll = await R.agents.isApprovedForAll(account, CFG.market);
+  const rows = await Promise.all(ids.map(async (id) => {
+    const [tier, w, pend, dir, uri, lst] = await Promise.all([R.agents.tierOf(id), R.mine.weightOf(id), R.mine.pending(id), R.agents.directiveOf(id), R.agents.tokenURI(id), R.market.listings(id)]);
+    return { id, tier: Number(tier), w, pend, dir, img: imgFromUri(uri), listed: lst.seller !== ethers.ZeroAddress && ethers.getAddress(lst.seller) === account ? lst.price : null };
+  }));
+  rows.sort((a, b) => Number(a.id - b.id));
+  grid.innerHTML = "";
+  for (const r of rows) {
+    const c = document.createElement("div"); c.className = "nft";
+    c.innerHTML = `<img alt="Agent #${r.id}" loading="lazy"><div class="b">
+      <div><b>#${r.id}</b> <span style="color:${TIER[r.tier][1]};font-weight:800">${TIER[r.tier][0]}</span></div>
+      <div class="mono">Hashpower ${r.w}x</div>
+      <div class="mono" style="color:var(--mute)">Pending ${fmt(r.pend, 2)}</div>
+      <div class="d"></div>
+      <div class="lst"></div></div>`;
+    c.querySelector("img").src = r.img;
+    c.querySelector(".d").textContent = r.dir ? `“${r.dir}”` : "";
+    const box = c.querySelector(".lst");
+    if (r.listed !== null) {
+      box.innerHTML = `<div class="mono" style="font-size:12px;color:var(--gold)">Listed · ${fmt(r.listed)} SBLor</div><button class="btn small ghost block">Cancel listing</button>`;
+      box.querySelector("button").onclick = async () => { const rc = await sendTx(`Cancel #${r.id}`, $("listMsg"), () => W("market").cancel(r.id)); if (rc) msg($("listMsg"), `Listing for #${r.id} cancelled.`, "ok"); await refreshUser(); };
+    } else {
+      box.innerHTML = `<input class="in" style="padding:8px 10px;font-size:13px" inputmode="decimal" placeholder="Price in SBLor"><button class="btn small block" style="margin-top:6px">${approvedAll ? "List for sale" : "Approve & list"}</button>`;
+      box.querySelector("button").onclick = async () => {
+        const el = $("listMsg"); const v = box.querySelector("input").value.trim();
+        let price; try { price = ethers.parseUnits(v || "0", 18); } catch { return msg(el, "Enter a valid price.", "err"); }
+        if (price <= 0n) return msg(el, "Enter a price above 0.", "err");
+        if (!(await R.agents.isApprovedForAll(account, CFG.market))) {
+          const ok = await sendTx("Approve market for your agents", el, () => W("agents").setApprovalForAll(CFG.market, true)); if (!ok) return;
+        }
+        try { await W("market").list.staticCall(r.id, price); } catch (e) { return msg(el, explain(e), "err"); }
+        const rc = await sendTx(`List #${r.id}`, el, () => W("market").list(r.id, price));
+        if (rc) msg(el, `#${r.id} listed for ${fmt(price)} SBLor. Buyers pay ${fmt(price + price * 300n / 10000n)}; you receive ${fmt(price - price * 300n / 10000n)}.`, "ok");
+        await refreshUser(); await loadMarket();
+      };
+    }
+    grid.appendChild(c);
+  }
+}
+$("claimBtn").onclick = async () => {
+  const el = $("claimMsg");
+  try { await W("mine").claim.staticCall(); } catch (e) { return msg(el, explain(e), "err"); }
+  const rc = await sendTx("Claim", el, () => W("mine").claim());
+  if (rc) {
+    let amt = 0n; for (const l of rc.logs) { try { const ev = R.mine.interface.parseLog(l); if (ev?.name === "Claimed") amt += ev.args.amount; } catch {} }
+    msg(el, `Claimed ${fmt(amt, 2)} SBLor.`, "ok");
+  }
+  await refreshStats(); await refreshUser();
+};
+
+// ------------------------------------------------------------------ market
+let MARKET = [];
+async function loadMarket() {
+  try {
+    const p = await readProvider();
+    const latest = await p.getBlockNumber();
+    const ids = new Set();
+    const STEP = 500000;
+    for (let from = CFG.marketDeployBlock; from <= latest; from += STEP) {
+      const to = Math.min(from + STEP - 1, latest);
+      const logs = await R.market.queryFilter(R.market.filters.Listed(), from, to);
+      logs.forEach((l) => ids.add(l.args.id));
+    }
+    const rows = await Promise.all([...ids].map(async (id) => {
+      const l = await R.market.listings(id);
+      if (l.seller === ethers.ZeroAddress) return null;
+      const [owner, tier, cost, approvedAll, approved, uri, dir] = await Promise.all([
+        R.agents.ownerOf(id), R.agents.tierOf(id), R.market.costFor(id), R.agents.isApprovedForAll(l.seller, CFG.market), R.agents.getApproved(id), R.agents.tokenURI(id), R.agents.directiveOf(id),
+      ]);
+      const valid = ethers.getAddress(owner) === ethers.getAddress(l.seller) && (approvedAll || ethers.getAddress(approved) === ethers.getAddress(CFG.market));
+      return { id, seller: ethers.getAddress(l.seller), price: l.price, cost, tier: Number(tier), valid, img: imgFromUri(uri), dir };
+    }));
+    MARKET = rows.filter(Boolean).sort((a, b) => (a.price < b.price ? -1 : 1));
+  } catch (e) { console.error(e); MARKET = null; }
+  renderMarket();
+}
+function renderMarket() {
+  const grid = $("marketGrid"), empty = $("marketEmpty");
+  if (MARKET === null) { grid.innerHTML = ""; empty.style.display = "block"; empty.textContent = "Could not load listings from the RPC."; return; }
+  const live = MARKET.filter((m) => m.valid || (account && m.seller === account));
+  if (!live.length) { grid.innerHTML = ""; empty.style.display = "block"; empty.textContent = "No agents listed yet."; return; }
+  empty.style.display = "none"; grid.innerHTML = "";
+  for (const m of live) {
+    const mine = account && m.seller === account;
+    const c = document.createElement("div"); c.className = "nft";
+    c.innerHTML = `<img alt="Agent #${m.id}" loading="lazy"><div class="b">
+      <div><b>#${m.id}</b> <span style="color:${TIER[m.tier][1]};font-weight:800">${TIER[m.tier][0]}</span></div>
+      <div class="mono">Price ${fmt(m.price)} SBLor</div>
+      <div class="mono" style="color:var(--mute);font-size:12px">You pay ${fmt(m.cost)} (incl. 3%)</div>
+      <div class="addr">Seller ${short(m.seller)}${m.valid ? "" : " · <span style='color:var(--bad)'>not buyable (approval/owner changed)</span>"}</div>
+      <div class="d"></div><button class="btn small block"></button></div>`;
+    c.querySelector("img").src = m.img;
+    c.querySelector(".d").textContent = m.dir ? `“${m.dir}”` : "";
+    const b = c.querySelector("button");
+    if (mine) {
+      b.textContent = "Cancel listing"; b.className = "btn small ghost block";
+      b.onclick = async () => { const rc = await sendTx(`Cancel #${m.id}`, $("marketMsg"), () => W("market").cancel(m.id)); if (rc) msg($("marketMsg"), `Listing #${m.id} cancelled.`, "ok"); await loadMarket(); await refreshUser(); };
+    } else {
+      b.textContent = account ? "Buy" : "Connect to buy"; b.disabled = !m.valid;
+      b.onclick = async () => {
+        const el = $("marketMsg");
+        if (!account) return openWalletPicker();
+        const [bal, allow] = await Promise.all([R.token.balanceOf(account), R.token.allowance(account, CFG.market)]);
+        if (bal < m.cost) return msg(el, `Not enough SBLor: you need ${fmt(m.cost)} (price + 3%).`, "err");
+        if (allow < m.cost) { const ok = await sendTx(`Approve ${fmt(m.cost)} SBLor for the market`, el, () => W("token").approve(CFG.market, m.cost)); if (!ok) return; }
+        try { await W("market").buy.staticCall(m.id, m.price); } catch (e) { return msg(el, explain(e), "err"); }
+        const rc = await sendTx(`Buy #${m.id}`, el, () => W("market").buy(m.id, m.price));
+        if (rc) msg(el, `You bought agent #${m.id}. It now mines for you.`, "ok");
+        await loadMarket(); await refreshStats(); await refreshUser();
+      };
+    }
+    grid.appendChild(c);
+  }
+}
+
+// ------------------------------------------------------------------ tabs, footer, boot
+function goto(t) {
+  document.querySelectorAll("#tabs button").forEach((b) => b.classList.toggle("on", b.dataset.t === t));
+  document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("on", p.id === "p-" + t));
+  if (t === "market") loadMarket();
+}
+$("tabs").addEventListener("click", (e) => { const t = e.target.closest("button")?.dataset.t; if (t) goto(t); });
+document.addEventListener("click", (e) => { const a = e.target.closest("[data-goto]"); if (a) { e.preventDefault(); goto(a.dataset.goto); window.scrollTo({ top: $("tabs").offsetTop - 70, behavior: "smooth" }); } });
+$("regLink").href = exAddr(CFG.registry);
+$("contracts").innerHTML = [["SBLor token", CFG.token], ["Seblak Agents (NFT)", CFG.agents], ["Seblak Mine", CFG.mine], ["Seblak Market", CFG.market]]
+  .map(([n, a]) => `<div><span>${n}</span><a target="_blank" rel="noopener" href="${exAddr(a)}">${short(a)}</a></div>`).join("");
+
+try {
+  await initRead();
+  await refreshStats();
+  updateMintUi();
+  loadMarket();
+} catch (e) {
+  console.error(e);
+  document.querySelectorAll(".pill,#netPill,#status").forEach((el) => { el.textContent = "RPC unavailable — refresh"; });
+}
+// silent reconnect if the wallet already authorised this site
+setTimeout(async () => {
+  const list = discovered.size ? [...discovered.values()] : legacyProviders();
+  if (list.length === 1) {
+    try { const a = await list[0].provider.request({ method: "eth_accounts" }); if (a?.length) await connectWith(list[0].provider); } catch {}
+  }
+}, 400);
+setInterval(async () => { await refreshStats(); if (account) await refreshUser(); }, 20000);
+window.__sblor = { CFG, ABI, S: () => S, U: () => U }; // for debugging
+</script>
+</body>
+</html>
